@@ -1,0 +1,5 @@
+bin
+obj
+.env
+Sistema-Gerenciamento.http
+Sistema-Gerenciamento.sln
