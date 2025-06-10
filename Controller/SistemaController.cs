@@ -59,5 +59,23 @@ namespace Sistema_Gerenciamento.Controller
                 return StatusCode(500, $"Erro: {ex.Message}");
             }
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> BuscarPorId(int id)
+        {
+            try
+            {
+                var carro = await _database.ObterCarroPorIdAsync(id);
+                if (carro == null)
+                {
+                    return NotFound($"Nenehum carro encontrado com o Id fornecido: {id}");
+                }
+                return Ok(carro);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro: {ex.Message}");
+            }
+        }
     }
 }

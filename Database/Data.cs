@@ -41,5 +41,15 @@ namespace Sistema_Gerenciamento.Data
             var carros = await conexao.QueryAsync<Carro>(sql);
             return carros;
         }
+
+        public async Task<Carro?> ObterCarroPorIdAsync(int id)
+        {
+            const string sql = "SELECT * FROM carro WHERE id = @Id";
+
+            using var conexao = await GetConnectionAsync();
+            var carro = await conexao.QueryFirstOrDefaultAsync<Carro>(sql, new { Id = id });
+            return carro;
+        }
+
     }
 }
