@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Sistema_Gerenciamento.Data;
+using Sistema_Gerenciamento.DTO;
 using Sistema_Gerenciamento.models;
 
 namespace Sistema_Gerenciamento.Controller
@@ -68,13 +69,49 @@ namespace Sistema_Gerenciamento.Controller
                 var carro = await _database.ObterCarroPorIdAsync(id);
                 if (carro == null)
                 {
-                    return NotFound($"Nenehum carro encontrado com o Id fornecido: {id}");
+                    return NotFound($"Nenhum carro encontrado com o Id fornecido: {id}");
                 }
                 return Ok(carro);
             }
             catch (Exception ex)
             {
                 return StatusCode(500, $"Erro: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeletarPorId(int id)
+        {
+            try
+            {
+                var sucess = await _database.DeletarCarroAsync(id);
+                if (sucess)
+                {
+                    return Ok("Carro deletado com sucesso!");
+                }
+                return NotFound("Carro não encontrado ou não cadastrado na tabela");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Erro ao deletar carro: {ex.Message}");
+            }
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> AtualizarCarroAsync(int id, [FromBody] AtualizarCarroDTO atualizarCarroDTO)
+        {
+            try
+            {
+                var sucess = await _database.AtualizarCarroAsync(id, atualizarCarroDTO);
+                if (sucess)
+                {
+                    return Ok($"Carro atualizado com sucesso!");
+                }
+                return NotFound("Carro não encontrado ou não cadastrado");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Erro ao atualizar no banco de dados: {ex.Message}");
             }
         }
     }

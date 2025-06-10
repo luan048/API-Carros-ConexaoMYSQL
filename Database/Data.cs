@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using MySql.Data.MySqlClient;
+using Sistema_Gerenciamento.DTO;
 using Sistema_Gerenciamento.models;
 
 namespace Sistema_Gerenciamento.Data
@@ -51,5 +52,22 @@ namespace Sistema_Gerenciamento.Data
             return carro;
         }
 
+        public async Task<bool> DeletarCarroAsync(int id)
+        {
+            const string sql = "DELETE FROM carro WHERE Id = @id";
+
+            using var conexao = await GetConnectionAsync();
+            var linhasAfetadas = await conexao.ExecuteAsync(sql, new { Id = id });
+            return linhasAfetadas > 0;
+        }
+
+        public async Task<bool> AtualizarCarroAsync(int id, AtualizarCarroDTO atualizarCarroDTO)
+        {
+            const string sql = "UPDATE carro SET marca = @NovaMarca, modelo = @NovoModelo, ano = @NovoAno WHERE Id = @id";
+
+            using var conexao = await GetConnectionAsync();
+            var linhasAfetadas = await conexao.ExecuteAsync(sql, new { Id = id, NovaMarca = atualizarCarroDTO.NovaMarca, NovoModelo = atualizarCarroDTO.NovoModelo, NovoAno = atualizarCarroDTO.NovoAno });
+            return linhasAfetadas > 0;
+        }
     }
 }
